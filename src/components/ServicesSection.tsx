@@ -82,7 +82,7 @@ const ServicesSection = () => {
             return (
               <div
                 key={index}
-                className="glass-card glow-border animate-on-scroll hover-target group cursor-pointer"
+                className="premium-glass glow-border animate-on-scroll hover-target group cursor-pointer rounded-2xl p-6"
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <div className="relative">

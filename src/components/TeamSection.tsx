@@ -115,11 +115,11 @@ const TeamSection = () => {
         {/* Team Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-            <div
-              key={index}
-              className="glass-card glow-border animate-on-scroll group hover-target"
-              style={{ animationDelay: `${index * 150}ms` }}
-            >
+              <div
+                key={index}
+                className="premium-glass glow-border animate-on-scroll group hover-target rounded-2xl p-6"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
               <div className="text-center">
                 {/* Profile Image */}
                 <div className="relative inline-block mb-6">

@@ -141,7 +141,7 @@ const PortfolioSection = () => {
           {filteredProjects.filter(p => p.featured).map((project, index) => (
             <div
               key={project.id}
-              className="glass-card glow-border animate-on-scroll group hover-target"
+              className="premium-glass glow-border animate-on-scroll group hover-target rounded-2xl p-6"
               style={{ animationDelay: `${index * 200}ms` }}
             >
               <div className="relative overflow-hidden rounded-xl mb-6">
@@ -197,11 +197,11 @@ const PortfolioSection = () => {
         {/* Regular Projects Grid */}
         <div className="grid md:grid-cols-3 gap-6">
           {filteredProjects.filter(p => !p.featured).map((project, index) => (
-            <div
-              key={project.id}
-              className="glass-card animate-on-scroll group hover-target cursor-pointer"
-              style={{ animationDelay: `${(index + 2) * 150}ms` }}
-            >
+              <div
+                key={project.id}
+                className="premium-glass animate-on-scroll group hover-target cursor-pointer rounded-xl p-4"
+                style={{ animationDelay: `${(index + 2) * 150}ms` }}
+              >
               <div className="relative overflow-hidden rounded-lg mb-4">
                 <img
                   src={project.image}

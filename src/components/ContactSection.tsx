@@ -149,7 +149,7 @@ const ContactSection = () => {
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact Form */}
-          <div className="glass-card glow-border animate-on-scroll">
+          <div className="premium-glass glow-border animate-on-scroll rounded-2xl p-8">
             <h3 className="text-2xl font-bold mb-6 text-foreground">Start Your Project</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Name and Email */}
@@ -321,7 +321,7 @@ const ContactSection = () => {
             </div>
 
             {/* Process Steps */}
-            <div className="glass-card">
+            <div className="premium-glass rounded-xl p-6">
               <h4 className="text-xl font-semibold mb-4 text-foreground">Our Process</h4>
               <div className="space-y-4">
                 {[

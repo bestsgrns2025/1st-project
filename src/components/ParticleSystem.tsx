@@ -53,9 +53,10 @@ const ParticleSystem = () => {
           >
             <Icon
               size={particle.size}
-              className="text-primary/20"
+              className="text-primary/30"
               style={{
-                filter: 'drop-shadow(0 0 10px hsl(var(--primary) / 0.3))'
+                filter: 'drop-shadow(0 0 15px hsl(var(--primary-glow) / 0.6))',
+                color: `hsl(${221 + Math.random() * 40} 83% ${53 + Math.random() * 20}%)`,
               }}
             />
           </div>
