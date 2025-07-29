@@ -1,12 +1,74 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect } from 'react';
+import Navbar from '@/components/Navbar';
+import HeroSection from '@/components/HeroSection';
+import ServicesSection from '@/components/ServicesSection';
+import CounterSection from '@/components/CounterSection';
+import PortfolioSection from '@/components/PortfolioSection';
+import TeamSection from '@/components/TeamSection';
+import ContactSection from '@/components/ContactSection';
+import ParticleSystem from '@/components/ParticleSystem';
+import CustomCursor from '@/components/CustomCursor';
 
 const Index = () => {
+  useEffect(() => {
+    // Smooth scrolling for anchor links
+    const handleSmoothScroll = (e: Event) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.hash) {
+        e.preventDefault();
+        const element = document.querySelector(target.hash);
+        if (element) {
+          element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      }
+    };
+
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+      link.addEventListener('click', handleSmoothScroll);
+    });
+
+    return () => {
+      links.forEach(link => {
+        link.removeEventListener('click', handleSmoothScroll);
+      });
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="relative min-h-screen">
+      {/* Custom Cursor */}
+      <CustomCursor />
+      
+      {/* Floating Particles */}
+      <ParticleSystem />
+      
+      {/* Navigation */}
+      <Navbar />
+      
+      {/* Main Content */}
+      <main className="relative z-10">
+        <HeroSection />
+        <ServicesSection />
+        <CounterSection />
+        <PortfolioSection />
+        <TeamSection />
+        <ContactSection />
+      </main>
+      
+      {/* Footer */}
+      <footer className="bg-background border-t border-border py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <p className="text-muted-foreground">
+              © 2024 TechFlow. All rights reserved. Built with passion and innovation.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
