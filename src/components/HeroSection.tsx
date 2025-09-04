@@ -18,7 +18,7 @@ const HeroSection = () => {
         <div className="h-full w-full bg-[linear-gradient(hsl(var(--primary))_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary))_1px,transparent_1px)] bg-[size:50px_50px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,black_40%,transparent_100%)]"></div>
       </div>
 
-      <div className="container mx-auto px-4 z-10">
+      <div className="container mx-auto px-4 z-10 pt-20">
         <div className={`text-center max-w-4xl mx-auto transition-all duration-1000 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
         }`}>

@@ -1,18 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 const CustomCursor = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const followerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      if (cursorRef.current && followerRef.current) {
+        cursorRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        followerRef.current.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      }
     };
 
     const handleMouseEnter = () => setIsHovering(true);
     const handleMouseLeave = () => setIsHovering(false);
 
-    // Add event listeners for hover elements
     const hoverElements = document.querySelectorAll('button, a, .hover-target');
     
     hoverElements.forEach(el => {
@@ -32,13 +35,10 @@ const CustomCursor = () => {
   }, []);
 
   return (
-    <div
-      className={`custom-cursor ${isHovering ? 'hover' : ''}`}
-      style={{
-        left: mousePos.x - 10,
-        top: mousePos.y - 10,
-      }}
-    />
+    <>
+      <div ref={cursorRef} className={`custom-cursor ${isHovering ? 'hover' : ''}`} />
+      <div ref={followerRef} className={`cursor-follower ${isHovering ? 'hover' : ''}`} />
+    </>
   );
 };
 

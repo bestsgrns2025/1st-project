@@ -24,7 +24,7 @@ const TeamSection = () => {
 
   const teamMembers = [
     {
-      name: 'Alex Rodriguez',
+      name: 'sswkat ali',
       role: 'CEO & Founder',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face',
       bio: 'Visionary leader with 10+ years in tech industry, passionate about transforming businesses through innovation.',
@@ -36,7 +36,7 @@ const TeamSection = () => {
       }
     },
     {
-      name: 'Sarah Chen',
+      name: 'Roselin',
       role: 'CTO',
       image: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=400&h=400&fit=crop&crop=face',
       bio: 'Technology architect specializing in scalable solutions and cutting-edge development practices.',
@@ -48,7 +48,7 @@ const TeamSection = () => {
       }
     },
     {
-      name: 'Michael Johnson',
+      name: 'nancy evanjelin',
       role: 'Lead Frontend Developer',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
       bio: 'Frontend expert creating stunning user experiences with modern frameworks and design principles.',
@@ -57,42 +57,6 @@ const TeamSection = () => {
         linkedin: 'https://linkedin.com/in/michaeljohnson',
         twitter: 'https://twitter.com/michaeljohnson',
         github: 'https://github.com/michaeljohnson'
-      }
-    },
-    {
-      name: 'Emily Davis',
-      role: 'Lead Backend Developer',
-      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face',
-      bio: 'Backend specialist building robust, scalable server architectures and API solutions.',
-      skills: ['Node.js', 'Python', 'Database Design'],
-      social: {
-        linkedin: 'https://linkedin.com/in/emilydavis',
-        twitter: 'https://twitter.com/emilydavis',
-        github: 'https://github.com/emilydavis'
-      }
-    },
-    {
-      name: 'David Park',
-      role: 'DevOps Engineer',
-      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop&crop=face',
-      bio: 'Infrastructure expert ensuring seamless deployment and optimal performance across all platforms.',
-      skills: ['AWS', 'Docker', 'Kubernetes'],
-      social: {
-        linkedin: 'https://linkedin.com/in/davidpark',
-        twitter: 'https://twitter.com/davidpark',
-        github: 'https://github.com/davidpark'
-      }
-    },
-    {
-      name: 'Lisa Thompson',
-      role: 'UX/UI Designer',
-      image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=face',
-      bio: 'Creative designer crafting intuitive interfaces that delight users and drive engagement.',
-      skills: ['Figma', 'User Research', 'Prototyping'],
-      social: {
-        linkedin: 'https://linkedin.com/in/lisathompson',
-        twitter: 'https://twitter.com/lisathompson',
-        github: 'https://github.com/lisathompson'
       }
     }
   ];

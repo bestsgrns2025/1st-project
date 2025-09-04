@@ -81,6 +81,10 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			fontSize: {
+				base: '1.125rem',
+				p: 'clamp(1.2rem, 1.1vw, 1.5rem)'
+			},
 			keyframes: {
 				'accordion-down': {
 					from: { height: '0' },
