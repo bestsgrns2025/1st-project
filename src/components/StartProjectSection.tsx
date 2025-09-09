@@ -45,17 +45,14 @@ const StartProjectSection = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
     try {
-      const response = await fetch('https://formspree.io/f/xnnzvozz', {
+      const response = await fetch(`${apiUrl}/api/inquiries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...formData,
-          _replyto: formData.email,
-          _subject: `New project inquiry from ${formData.name} - ${formData.service}`,
-        }),
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
@@ -122,9 +119,9 @@ const StartProjectSection = () => {
 
         <div className="max-w-4xl mx-auto">
           {/* Contact Form */}
-          <div className="premium-glass glow-border animate-on-scroll rounded-2xl p-8">
+          <div className="bg-gradient-primary glow-border animate-on-scroll rounded-2xl p-8">
             <h3 className="text-2xl font-bold mb-6 text-foreground">Project Details</h3>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6" >
               {/* Name and Email */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>

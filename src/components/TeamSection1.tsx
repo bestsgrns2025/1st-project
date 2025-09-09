@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { Linkedin, Twitter, Github, Mail } from 'lucide-react';
-import author1 from '../assets/author1.jpg';
-import author2 from '../assets/author2.jpg';
+
+// ✅ Import team images (make sure they exist in /src/assets/images/team/)
+import aliImg from "../assets/Teams/shaphoto.png";
+import roselinImg from "../assets/Teams/Rubyphoto.jpeg";
+import nancyImg from "../assets/Teams/nancyphoto.jfif";
+// import emilyImg from "../../assets/images/team/emily.jpg";
+// import davidImg from "../../assets/images/team/david.jpg";
+// import lisaImg from "../../assets/images/team/lisa.jpg";
 
 const TeamSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -26,9 +32,9 @@ const TeamSection = () => {
 
   const teamMembers = [
     {
-      name: 'Sowkath ali',
+      name: 'Sāvukath Ali',
       role: 'CEO & Founder',
-      image: author1,
+      image: aliImg,
       bio: 'Visionary leader with 10+ years in tech industry, passionate about transforming businesses through innovation.',
       skills: ['Strategic Planning', 'Team Leadership', 'Product Vision'],
       social: {
@@ -38,9 +44,9 @@ const TeamSection = () => {
       }
     },
     {
-      name: 'Roselin',
-      role: 'Lead Frontend Developer',
-      image: author2,
+      name: 'Roselin Rubella',
+      role: 'lead Frontend Developer',
+      image: roselinImg,
       bio: 'Technology architect specializing in scalable solutions and cutting-edge development practices.',
       skills: ['System Architecture', 'Cloud Computing', 'DevOps'],
       social: {
@@ -50,9 +56,9 @@ const TeamSection = () => {
       }
     },
     {
-      name: 'Nancy evanjelin',
+      name: 'Nancy Evanjelin',
       role: 'Lead Frontend Developer',
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
+      image: nancyImg,
       bio: 'Frontend expert creating stunning user experiences with modern frameworks and design principles.',
       skills: ['React', 'Vue.js', 'UI/UX Design'],
       social: {
@@ -60,7 +66,43 @@ const TeamSection = () => {
         twitter: 'https://twitter.com/michaeljohnson',
         github: 'https://github.com/michaeljohnson'
       }
-    }
+    },
+    // {
+    //   name: 'Emily Davis',
+    //   role: 'Lead Backend Developer',
+    //   image: emilyImg,
+    //   bio: 'Backend specialist building robust, scalable server architectures and API solutions.',
+    //   skills: ['Node.js', 'Python', 'Database Design'],
+    //   social: {
+    //     linkedin: 'https://linkedin.com/in/emilydavis',
+    //     twitter: 'https://twitter.com/emilydavis',
+    //     github: 'https://github.com/emilydavis'
+    //   }
+    // },
+    // {
+    //   name: 'David Park',
+    //   role: 'DevOps Engineer',
+    //   image: davidImg,
+    //   bio: 'Infrastructure expert ensuring seamless deployment and optimal performance across all platforms.',
+    //   skills: ['AWS', 'Docker', 'Kubernetes'],
+    //   social: {
+    //     linkedin: 'https://linkedin.com/in/davidpark',
+    //     twitter: 'https://twitter.com/davidpark',
+    //     github: 'https://github.com/davidpark'
+    //   }
+    // },
+    // {
+    //   name: 'Lisa Thompson',
+    //   role: 'UX/UI Designer',
+    //   image: lisaImg,
+    //   bio: 'Creative designer crafting intuitive interfaces that delight users and drive engagement.',
+    //   skills: ['Figma', 'User Research', 'Prototyping'],
+    //   social: {
+    //     linkedin: 'https://linkedin.com/in/lisathompson',
+    //     twitter: 'https://twitter.com/lisathompson',
+    //     github: 'https://github.com/lisathompson'
+    //   }
+    // }
   ];
 
   return (
@@ -81,11 +123,11 @@ const TeamSection = () => {
         {/* Team Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {teamMembers.map((member, index) => (
-              <div
-                key={index}
-                className="premium-glass glow-border animate-on-scroll group hover-target rounded-2xl p-6"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
+            <div
+              key={index}
+              className="premium-glass glow-border animate-on-scroll group hover-target rounded-2xl p-6"
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
               <div className="text-center">
                 {/* Profile Image */}
                 <div className="relative inline-block mb-6">
@@ -180,9 +222,9 @@ const TeamSection = () => {
         <div className="text-center mt-16 animate-on-scroll">
           <h3 className="text-2xl font-bold mb-4 text-foreground">Want to Join Our Team?</h3>
           <p className="text-muted-foreground mb-6">We're always looking for talented individuals to join our mission</p>
-          <a href="#team" className="accent-button">
+          <button className="accent-button">
             View Open Positions
-          </a>
+          </button>
         </div>
       </div>
     </section>

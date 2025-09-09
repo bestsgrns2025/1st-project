@@ -45,14 +45,14 @@ const HeroSection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <button className="hero-button group">
+            <a href="#start-project" className="hero-button group flex items-center">
               Start Your Project
-              <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button className="flex items-center space-x-2 px-6 py-3 text-foreground hover:text-primary transition-colors hover-target">
+              <ArrowRight className="ml-1 h-6 w-5 transition-transform group-hover:translate-x-1" />
+            </a>
+            <a href="/video-page" target="_blank" rel="noopener noreferrer" className="flex items-center space-x-2 px-6 py-3 text-foreground hover:text-primary transition-colors hover-target">
               <Play className="h-5 w-5" />
               <span>Watch Demo</span>
-            </button>
+            </a>
           </div>
 
           {/* Stats */}

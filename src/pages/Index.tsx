@@ -4,8 +4,7 @@ import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import CounterSection from '@/components/CounterSection';
 import PortfolioSection from '@/components/PortfolioSection';
-import TeamSection from '@/components/TeamSection';
-import VideoSection from '@/components/VideoSection';
+import TeamSection from '@/components/TeamSection1';
 import StartProjectSection from '@/components/StartProjectSection';
 import ContactSection from '@/components/ContactSection';
 import ParticleSystem from '@/components/ParticleSystem';
@@ -58,7 +57,6 @@ const Index = () => {
         <CounterSection />
         <PortfolioSection />
         <TeamSection />
-        <VideoSection />
         <StartProjectSection />
         <ContactSection />
       </main>

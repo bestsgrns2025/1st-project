@@ -61,7 +61,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-20 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-12 relative overflow-hidden">
       <div className="absolute inset-0 section-gradient"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -136,9 +136,9 @@ const ServicesSection = () => {
 
         {/* CTA */}
         <div className="text-center mt-16 animate-on-scroll">
-          <button className="hero-button">
+          <a href="#services" className="hero-button">
             Explore All Services
-          </button>
+          </a>
         </div>
       </div>
     </section>
