@@ -8,7 +8,7 @@ const path = require('path'); // Add path
 const Image = require('./models/Image'); // Add Image model
 
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
