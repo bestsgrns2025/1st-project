@@ -31,6 +31,7 @@ const TeamSection = () => {
       image: author1,
       bio: 'Visionary leader with 10+ years in tech industry, passionate about transforming businesses through innovation.',
       skills: ['Strategic Planning', 'Team Leadership', 'Product Vision'],
+      email: 'sowkathali@gmail.com',
       social: {
         linkedin: 'https://linkedin.com/in/alexrodriguez',
         twitter: 'https://twitter.com/alexrodriguez',
@@ -43,6 +44,7 @@ const TeamSection = () => {
       image: author2,
       bio: 'Technology architect specializing in scalable solutions and cutting-edge development practices.',
       skills: ['System Architecture', 'Cloud Computing', 'DevOps'],
+      email: 'roselin@gmail.com',
       social: {
         linkedin: 'https://linkedin.com/in/sarahchen',
         twitter: 'https://twitter.com/sarahchen',
@@ -55,6 +57,7 @@ const TeamSection = () => {
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face',
       bio: 'Frontend expert creating stunning user experiences with modern frameworks and design principles.',
       skills: ['React', 'Vue.js', 'UI/UX Design'],
+      email: 'nancy@gmail.com',
       social: {
         linkedin: 'https://linkedin.com/in/michaeljohnson',
         twitter: 'https://twitter.com/michaeljohnson',
@@ -144,7 +147,7 @@ const TeamSection = () => {
                     <Github className="h-4 w-4 group-hover/social:scale-110 transition-transform" />
                   </a>
                   <a
-                    href={`mailto:${member.name.toLowerCase().replace(' ', '.')}@techflow.com`}
+                    href={`mailto:${member.email}`}
                     className="p-2 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover-target group/social"
                   >
                     <Mail className="h-4 w-4 group-hover/social:scale-110 transition-transform" />
