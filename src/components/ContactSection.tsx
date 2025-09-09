@@ -32,7 +32,7 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
     e.preventDefault();
     setStatus('loading');
     try {
-      const response = await fetch('/api/inquiries', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/inquiries`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
