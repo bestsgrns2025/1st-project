@@ -186,7 +186,7 @@ const TeamSection = () => {
                     <Github className="h-4 w-4 group-hover/social:scale-110 transition-transform" />
                   </a>
                   <a
-                    href={`mailto:${member.name.toLowerCase().replace(' ', '.')}@techflow.com`}
+                    href="#"
                     className="p-2 rounded-full bg-secondary hover:bg-primary hover:text-primary-foreground transition-all duration-300 hover-target group/social"
                   >
                     <Mail className="h-4 w-4 group-hover/social:scale-110 transition-transform" />
