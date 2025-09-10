@@ -149,7 +149,7 @@ const TeamSection = () => {
                   {member.name}
                 </h3>
                 <p className="text-primary font-medium mb-4">{member.role}</p>
-                <p className="text-muted-foreground text-sm mb-6 leading-relaxed">
+                <p className="text-muted-foreground group-hover:text-foreground text-sm mb-6 leading-relaxed">
                   {member.bio}
                 </p>
 

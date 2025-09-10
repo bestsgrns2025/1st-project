@@ -281,7 +281,7 @@ const PortfolioSection = () => {
                       <h3 className="text-2xl font-bold mb-3 text-foreground group-hover:text-primary transition-colors">
                         {project.title}
                       </h3>
-                      <p className="text-muted-foreground mb-4 leading-relaxed">
+                      <p className="text-muted-foreground group-hover:text-foreground mb-4 leading-relaxed">
                         {project.description}
                       </p>
 
@@ -325,7 +325,7 @@ const PortfolioSection = () => {
                     <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
                       {project.title}
                     </h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                    <p className="text-muted-foreground group-hover:text-foreground text-sm mb-4 line-clamp-2">
                       {project.description}
                     </p>
 

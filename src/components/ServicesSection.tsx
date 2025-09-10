@@ -61,7 +61,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-12 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-24 relative overflow-hidden">
       <div className="absolute inset-0 section-gradient"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -95,7 +95,7 @@ const ServicesSection = () => {
                   <h3 className="text-2xl font-bold mb-4 text-foreground group-hover:text-primary transition-colors">
                     {service.title}
                   </h3>
-                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                  <p className="text-muted-foreground group-hover:text-foreground mb-6 leading-relaxed">
                     {service.description}
                   </p>
 
@@ -104,7 +104,7 @@ const ServicesSection = () => {
                     {service.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center text-sm">
                         <div className="w-2 h-2 bg-primary rounded-full mr-3"></div>
-                        <span className="text-muted-foreground">{feature}</span>
+                        <span className="text-muted-foreground group-hover:text-foreground">{feature}</span>
                       </li>
                     ))}
                   </ul>
