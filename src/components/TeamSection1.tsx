@@ -219,10 +219,10 @@ const TeamSection = () => {
         </div>
 
         {/* Join Team CTA */}
-        <div className="text-center mt-16 animate-on-scroll">
+        <div className="text-center mt-8 animate-on-scroll">
           <h3 className="text-2xl font-bold mb-4 text-foreground">Want to Join Our Team?</h3>
           <p className="text-muted-foreground mb-6">We're always looking for talented individuals to join our mission</p>
-          <button className="accent-button">
+          <button className="accent-button bg-gradient-primary text-white">
             View Open Positions
           </button>
         </div>
