@@ -110,7 +110,7 @@ const CounterSection = () => {
   ];
 
   return (
-    <section ref={sectionRef} className="py-12 relative overflow-hidden">
+    <section ref={sectionRef} className="py-10 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/10 to-background"></div>
       
       <div className="container mx-auto px-4 relative z-10">

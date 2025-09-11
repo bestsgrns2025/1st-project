@@ -106,7 +106,7 @@ const TeamSection = () => {
   ];
 
   return (
-    <section id="team" ref={sectionRef} className="py-20 relative overflow-hidden">
+    <section id="team" ref={sectionRef} className="py-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-background via-secondary/5 to-background"></div>
       
       <div className="container mx-auto px-4 relative z-10">

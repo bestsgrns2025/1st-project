@@ -103,7 +103,7 @@ const StartProjectSection = () => {
   ];
 
   return (
-    <section id="start-project" ref={sectionRef} className="py-20 relative overflow-hidden">
+    <section id="start-project" ref={sectionRef} className="py-8 relative overflow-hidden">
       <div className="absolute inset-0 section-gradient"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -120,12 +120,12 @@ const StartProjectSection = () => {
         <div className="max-w-4xl mx-auto">
           {/* Contact Form */}
           <div className="bg-gradient-primary glow-border animate-on-scroll rounded-2xl p-8">
-            <h3 className="text-2xl font-bold mb-6 text-foreground">Project Details</h3>
-            <form onSubmit={handleSubmit} className="space-y-6" >
+            <h3 className="text-white text-2xl font-bold mb-6 text-foreground">Project Details</h3>
+            <form onSubmit={handleSubmit} className="space-y-6 " >
               {/* Name and Email */}
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className=" grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Full Name *
                   </label>
                   <input
@@ -139,7 +139,7 @@ const StartProjectSection = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Email Address *
                   </label>
                   <input
@@ -157,7 +157,7 @@ const StartProjectSection = () => {
               {/* Company and Service */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Company Name
                   </label>
                   <input
@@ -170,7 +170,7 @@ const StartProjectSection = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Service Needed *
                   </label>
                   <select
@@ -191,7 +191,7 @@ const StartProjectSection = () => {
               {/* Budget and Timeline */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Project Budget
                   </label>
                   <select
@@ -207,7 +207,7 @@ const StartProjectSection = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
+                  <label className="text-white block text-sm font-medium mb-2 text-foreground">
                     Timeline
                   </label>
                   <input
@@ -223,7 +223,7 @@ const StartProjectSection = () => {
 
               {/* Message */}
               <div>
-                <label className="block text-sm font-medium mb-2 text-foreground">
+                <label className="text-white block text-sm font-medium mb-2 text-foreground">
                   Project Details *
                 </label>
                 <textarea
