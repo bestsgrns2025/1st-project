@@ -12,6 +12,9 @@ interface Inquiry {
   budget?: string;
   timeline?: string;
   message: string;
+  location?: string; // Existing location string
+  latitude?: number; // New field
+  longitude?: number; // New field
   createdAt: string;
 }
 
@@ -140,6 +143,20 @@ const AdminDashboard = () => {
                 {inquiry.budget && <p className="text-muted-foreground mb-1"><strong>Budget:</strong> {inquiry.budget}</p>}
                 {inquiry.timeline && <p className="text-muted-foreground mb-1"><strong>Timeline:</strong> {inquiry.timeline}</p>}
                 <p className="text-muted-foreground mb-4"><strong>Message:</strong> {inquiry.message}</p>
+                {inquiry.location && <p className="text-muted-foreground mb-1"><strong>Location:</strong> {inquiry.location}</p>}
+                {(inquiry.latitude && inquiry.longitude) && (
+                  <p className="text-muted-foreground mb-1">
+                    <strong>Coordinates:</strong> {inquiry.latitude}, {inquiry.longitude}
+                    <a 
+                      href={`https://www.google.com/maps/search/?api=1&query=${inquiry.latitude},${inquiry.longitude}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="ml-2 text-primary hover:underline"
+                    >
+                      View on Map
+                    </a>
+                  </p>
+                )}
                 <p className="text-sm text-gray-500">Submitted on: {format(new Date(inquiry.createdAt), 'PPP p')}</p>
               </div>
             ))}
