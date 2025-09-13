@@ -29,6 +29,12 @@ const ProjectInquirySchema = new mongoose.Schema({
   location: {
     type: String,
   },
+  latitude: {
+    type: Number,
+  },
+  longitude: {
+    type: Number,
+  },
 }, {
   timestamps: true
 });
