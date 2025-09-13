@@ -8,6 +8,16 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { MapPin, Phone, Mail, Clock, CheckCircle, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Textarea } from './ui/textarea';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog';
+
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
 const InquiryForm = ({ setStatus, status, setOpen }) => {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,9 +30,11 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
     latitude: null as number | null,
     longitude: null as number | null,
   });
+  const [isGeolocationLoading, setIsGeolocationLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchGeolocation = useCallback(() => {
     if (navigator.geolocation) {
+      setIsGeolocationLoading(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setFormData((prev) => ({
@@ -30,16 +42,26 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           }));
+          setIsGeolocationLoading(false);
         },
         (error) => {
           console.error('Error getting geolocation:', error);
+          setIsGeolocationLoading(false);
         },
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
       console.log('Geolocation is not supported by this browser.');
+      setIsGeolocationLoading(false);
     }
-  }, []); // Run once on mount
+  }, []);
+
+  useEffect(() => {
+    // Fetch geolocation when the form is opened (assuming setOpen is true when dialog is open)
+    if (setOpen) { // setOpen is a function, so this check is for its existence
+      fetchGeolocation();
+    }
+  }, [fetchGeolocation, setOpen]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -64,7 +86,7 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
 
       if (response.ok) {
         setStatus('success');
-        setFormData({ name: '', email: '', company: '', service: '', budget: '', timeline: '', message: '' });
+        setFormData({ name: '', email: '', company: '', service: '', budget: '', timeline: '', message: '', latitude: null, longitude: null });
       } else {
         setStatus('error');
       }
@@ -108,13 +130,16 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
       </div>
       <Textarea name="message" placeholder="Your Message" required value={formData.message} onChange={handleInputChange} />
       <DialogFooter>
-        <Button type="submit" className="w-full" disabled={status === 'loading'}>
+        <Button type="submit" className="w-full" disabled={status === 'loading' || isGeolocationLoading}>
           {status === 'loading' && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {status !== 'loading' && <Send className="mr-2 h-4 w-4" />}
-          {status === 'loading' ? 'Sending...' : 'Send Message'}
+          {isGeolocationLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {status === 'loading' || isGeolocationLoading ? 'Getting Location...' : 'Send Message'}
         </Button>
       </DialogFooter>
       {status === 'error' && <p className="text-red-500 text-center text-sm mt-2">Something went wrong. Please try again.</p>}
+      {!isGeolocationLoading && !formData.latitude && !formData.longitude && (
+        <p className="text-yellow-500 text-center text-sm mt-2">Location not detected. Please ensure location services are enabled.</p>
+      )}
     </form>
   );
 };
