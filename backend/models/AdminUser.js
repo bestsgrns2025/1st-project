@@ -25,7 +25,11 @@ AdminUserSchema.pre('save', async function (next) {
 
 // Compare password
 AdminUserSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
+  console.log('Entered password:', enteredPassword); // Added for debugging
+  console.log('Stored password hash:', this.password); // Added for debugging
+  const isMatch = await bcrypt.compare(enteredPassword, this.password);
+  console.log('Password match result:', isMatch); // Added for debugging
+  return isMatch;
 };
 
 module.exports = mongoose.model('AdminUser', AdminUserSchema);
