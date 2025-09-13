@@ -30,16 +30,25 @@ const protect = (req, res, next) => {
 // @access  Public
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
+  console.log('Login attempt:', { username, password }); // Added for debugging
 
   try {
     const user = await AdminUser.findOne({ username });
+    console.log('User found:', user); // Added for debugging
 
-    if (user && (await user.matchPassword(password))) {
-      const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      res.json({ token });
-    } else {
-      res.status(401).json({ message: 'Invalid credentials' });
+    if (user) {
+      const isMatch = await user.matchPassword(password);
+      console.log('Password match:', isMatch); // Added for debugging
+
+      if (isMatch) {
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        return res.json({ token });
+      }
     }
+
+    // If user is not found or password doesn't match
+    res.status(401).json({ message: 'Invalid credentials' });
+
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Server Error' });
