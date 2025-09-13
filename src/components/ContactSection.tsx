@@ -17,7 +17,29 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
     budget: '',
     timeline: '',
     message: '',
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setFormData((prev) => ({
+            ...prev,
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          }));
+        },
+        (error) => {
+          console.error('Error getting geolocation:', error);
+        },
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+      );
+    } else {
+      console.log('Geolocation is not supported by this browser.');
+    }
+  }, []); // Run once on mount
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
