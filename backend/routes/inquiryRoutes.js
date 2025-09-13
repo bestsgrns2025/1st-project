@@ -22,25 +22,44 @@ let transporter = nodemailer.createTransport({
 router.post('/', async (req, res) => {
   try {
     let location = 'Unknown';
-    try {
-      const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      console.log('IP Address:', ip);
-      const geo = geoip.lookup(ip);
-      if (geo) {
-        location = `${geo.city}, ${geo.country}`;
+    let latitude = req.body.latitude;
+    let longitude = req.body.longitude;
+
+    // If latitude and longitude are provided from the frontend, use them
+    if (latitude && longitude) {
+      // Optionally, you could use a reverse geocoding service here
+      // to get a human-readable location from lat/lng if needed.
+      // For now, we'll just store the coordinates and keep location as Unknown or resolve it later.
+      location = `Lat: ${latitude}, Lng: ${longitude}`;
+    } else {
+      // Fallback to GeoIP lookup if not provided by frontend
+      try {
+        const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        console.log('IP Address:', ip);
+        const geo = geoip.lookup(ip);
+        if (geo) {
+          location = `${geo.city}, ${geo.country}`;
+          // If GeoIP provides coordinates, store them
+          if (geo.ll && geo.ll.length === 2) {
+            latitude = geo.ll[0];
+            longitude = geo.ll[1];
+          }
+        }
+      } catch (error) {
+        console.error('GeoIP lookup failed:', error);
       }
-    } catch (error) {
-      console.error('GeoIP lookup failed:', error);
     }
 
     const newInquiry = new ProjectInquiry({
       ...req.body,
       location,
+      latitude,
+      longitude,
     });
     const inquiry = await newInquiry.save();
 
     // Send email notification
-    const { name, email, company, service, budget, message, timeline } = req.body;
+    const { name, email, company, service, budget, message, timeline, latitude, longitude } = req.body;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -57,6 +76,8 @@ router.post('/', async (req, res) => {
           <li><strong>Timeline:</strong> ${timeline || 'N/A'}</li>
           <li><strong>Message:</strong> ${message}</li>
           <li><strong>Location:</strong> ${location}</li>
+          ${latitude ? `<li><strong>Latitude:</strong> ${latitude}</li>` : ''}
+          ${longitude ? `<li><strong>Longitude:</strong> ${longitude}</li>` : ''}
         </ul>
       `,
     };
