@@ -31,6 +31,7 @@ const protect = (req, res, next) => {
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
   console.log('Login attempt:', { username, password }); // Added for debugging
+  console.log('Searching for user with query:', { username }); // Added for debugging
 
   try {
     const user = await AdminUser.findOne({ username });

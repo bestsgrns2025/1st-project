@@ -38,7 +38,10 @@ const upload = multer({ storage: storage });
 
 // MongoDB Connection
 mongoose.connect(config.MONGO_URI)
-  .then(() => console.log('MongoDB connected'))
+  .then(() => {
+    console.log('MongoDB connected');
+    console.log('Connected to database:', mongoose.connection.name); // Added for debugging
+  })
   .catch(err => console.error(err));
 
 // Routes
