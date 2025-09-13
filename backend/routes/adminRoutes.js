@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
     }
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 
@@ -55,7 +55,7 @@ router.get('/inquiries', protect, async (req, res) => {
     res.json(inquiries);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 
@@ -82,7 +82,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ message: 'Admin user registered successfully' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send('Server Error');
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 

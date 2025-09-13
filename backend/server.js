@@ -6,6 +6,7 @@ const cors = require('cors');
 const multer = require('multer'); // Add multer
 const path = require('path'); // Add path
 const Image = require('./models/Image'); // Add Image model
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -16,6 +17,12 @@ app.use(express.json());
 
 // Serve static files from the 'public' directory
 app.use('/public', express.static(path.join(__dirname, 'public'))); // Add this line
+
+// Create upload directory if it doesn't exist
+const uploadDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Multer storage configuration
 const storage = multer.diskStorage({
