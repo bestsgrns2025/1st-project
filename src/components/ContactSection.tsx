@@ -18,7 +18,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
-const InquiryForm = ({ setStatus, status, setOpen }) => {
+type FormStatus = 'idle' | 'loading' | 'success' | 'error';
+
+const InquiryForm = ({ setStatus, status, setOpen, isDialogOpen }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -57,11 +59,11 @@ const InquiryForm = ({ setStatus, status, setOpen }) => {
   }, []);
 
   useEffect(() => {
-    // Fetch geolocation when the form is opened (assuming setOpen is true when dialog is open)
-    if (setOpen) { // setOpen is a function, so this check is for its existence
+    // Fetch geolocation when the dialog is opened
+    if (isDialogOpen) {
       fetchGeolocation();
     }
-  }, [fetchGeolocation, setOpen]);
+  }, [isDialogOpen, fetchGeolocation]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -217,7 +219,7 @@ const ContactSection = () => {
                   Fill out the form below and we'll get back to you as soon as possible.
                 </DialogDescription>
               </DialogHeader>
-              <InquiryForm setStatus={setStatus} status={status} setOpen={setOpen} />
+              <InquiryForm setStatus={setStatus} status={status} setOpen={setOpen} isDialogOpen={open} />
             </DialogContent>
           </Dialog>
         </div>
