@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
     const inquiry = await newInquiry.save();
 
     // Send email notification
-    const { name, email, company, service, budget, message, timeline, latitude, longitude } = req.body;
+    const { name, email, company, service, budget, message, timeline } = req.body;
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
