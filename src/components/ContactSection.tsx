@@ -1,12 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-import { MapPin, Phone, Mail, Clock, CheckCircle, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog';
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { MapPin, Phone, Mail, Clock, CheckCircle, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
@@ -15,8 +6,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog';
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
