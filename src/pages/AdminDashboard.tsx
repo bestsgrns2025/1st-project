@@ -12,9 +12,6 @@ interface Inquiry {
   budget?: string;
   timeline?: string;
   message: string;
-  location?: string; // Existing location string
-  latitude?: number; // New field
-  longitude?: number; // New field
   createdAt: string;
 }
 
@@ -39,9 +36,7 @@ const AdminDashboard = () => {
 
       try {
         const response = await fetch('http://localhost:5000/api/admin/inquiries', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+          headers: { 'Authorization': `Bearer ${token}` },
         });
 
         if (response.ok) {
@@ -89,6 +84,7 @@ const AdminDashboard = () => {
       }
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
+
       const a = document.createElement('a');
       a.href = url;
       a.download = 'inquiries.xlsx';
@@ -106,58 +102,81 @@ const AdminDashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background text-foreground">
-        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
-        <p className="ml-4">Loading inquiries...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground p-6">
+        <div className="animate-spin w-10 h-10 border-4 border-primary border-t-transparent rounded-full"></div>
+        <p className="mt-4 text-center text-lg">Loading inquiries...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground py-12 px-4">
+    <div className="min-h-screen bg-background text-foreground py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-          <div className="flex space-x-4">
-            <button onClick={handleExport} className="hero-button">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 gap-4">
+          <h1 className="text-3xl sm:text-4xl font-bold text-center sm:text-left">
+            Admin Dashboard
+          </h1>
+          <div className="flex flex-wrap justify-center sm:justify-end gap-3">
+            <button
+              onClick={handleExport}
+              className="hero-button w-full sm:w-auto"
+            >
               Export to Excel
             </button>
-            <button onClick={handleLogout} className="hero-button bg-red-600 hover:bg-red-700">
+            <button
+              onClick={handleLogout}
+              className="hero-button bg-red-600 hover:bg-red-700 w-full sm:w-auto"
+            >
               Logout
             </button>
           </div>
         </div>
 
+        {/* Inquiries */}
         {inquiries.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-xl text-muted-foreground">No project inquiries found.</p>
+            <p className="text-lg sm:text-xl text-muted-foreground">
+              No project inquiries found.
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {inquiries.map((inquiry) => (
-              <div key={inquiry._id} className="premium-glass glow-border rounded-lg p-6">
-                <h2 className="text-2xl font-bold mb-2 text-primary">{inquiry.name}</h2>
-                <p className="text-muted-foreground mb-1"><strong>Email:</strong> {inquiry.email}</p>
-                {inquiry.company && <p className="text-muted-foreground mb-1"><strong>Company:</strong> {inquiry.company}</p>}
-                <p className="text-muted-foreground mb-1"><strong>Service:</strong> {inquiry.service}</p>
-                {inquiry.budget && <p className="text-muted-foreground mb-1"><strong>Budget:</strong> {inquiry.budget}</p>}
-                {inquiry.timeline && <p className="text-muted-foreground mb-1"><strong>Timeline:</strong> {inquiry.timeline}</p>}
-                <p className="text-muted-foreground mb-4"><strong>Message:</strong> {inquiry.message}</p>
-                {inquiry.location && <p className="text-muted-foreground mb-1"><strong>Location:</strong> {inquiry.location}</p>}
-                {(inquiry.latitude && inquiry.longitude) && (
-                  <p className="text-muted-foreground mb-1">
-                    <strong>Coordinates:</strong> {inquiry.latitude}, {inquiry.longitude}
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${inquiry.latitude},${inquiry.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-2 text-primary hover:underline"
-                    >
-                      View on Map
-                    </a>
+              <div
+                key={inquiry._id}
+                className="premium-glass glow-border rounded-lg p-6 flex flex-col"
+              >
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 text-primary break-words">
+                  {inquiry.name}
+                </h2>
+                <p className="text-muted-foreground mb-1 break-words">
+                  <strong>Email:</strong> {inquiry.email}
+                </p>
+                {inquiry.company && (
+                  <p className="text-muted-foreground mb-1 break-words">
+                    <strong>Company:</strong> {inquiry.company}
                   </p>
                 )}
-                <p className="text-sm text-gray-500">Submitted on: {format(new Date(inquiry.createdAt), 'PPP p')}</p>
+                <p className="text-muted-foreground mb-1">
+                  <strong>Service:</strong> {inquiry.service}
+                </p>
+                {inquiry.budget && (
+                  <p className="text-muted-foreground mb-1">
+                    <strong>Budget:</strong> {inquiry.budget}
+                  </p>
+                )}
+                {inquiry.timeline && (
+                  <p className="text-muted-foreground mb-1">
+                    <strong>Timeline:</strong> {inquiry.timeline}
+                  </p>
+                )}
+                <p className="text-muted-foreground mb-4 break-words">
+                  <strong>Message:</strong> {inquiry.message}
+                </p>
+                <p className="text-sm text-gray-500 mt-auto">
+                  Submitted on: {format(new Date(inquiry.createdAt), 'PPP p')}
+                </p>
               </div>
             ))}
           </div>
