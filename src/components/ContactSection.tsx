@@ -1,13 +1,3 @@
-import { useEffect, useRef, useState } from 'react';
-import { MapPin, Phone, Mail, Clock, CheckCircle, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Textarea } from './ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog';
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
-
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { MapPin, Phone, Mail, Clock, CheckCircle, Send, Loader2, AlertTriangle, Check } from 'lucide-react';
 import { Button } from './ui/button';
@@ -15,8 +5,6 @@ import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogDescription } from './ui/dialog';
-
-type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -174,25 +162,25 @@ const ContactSection = () => {
       icon: MapPin,
       title: 'Office Location',
       details: ['123 Tech Street', 'Innovation District', ],
-      link: 'https://maps.google.com'
+      link: 'https://maps.google.com',
+      linkType: 'block'
     },
     {
       icon: Phone,
       title: 'Phone Number',
       details: ['+6597969414', '+91 99163 97739'],
-      link: '+91 99163 97739'
+      linkType: 'tel'
     },
     {
       icon: Mail,
       title: 'Email Address',
       details: ['shah@pbm.sg', 'support@bestsg.com'],
-      link: 'rn.bestsg2025@gmail.com'
+      linkType: 'mailto'
     },
     {
       icon: Clock,
       title: 'Business Hours',
       details: ['Mon - Fri: 9:00 AM - 6:00 PM', 'Sat: 10:00 AM - 4:00 PM', 'Sun: Closed'],
-      link: null
     }
   ];
 
@@ -253,11 +241,21 @@ const ContactSection = () => {
                       </div>
                       <div>
                         <h4 className="font-semibold mb-2 text-foreground">{info.title}</h4>
-                        {info.details.map((detail, detailIndex) => (
-                          <p key={detailIndex} className="text-muted-foreground">
-                            {info.link ? <a href={info.link} className="hover:text-primary transition-colors">{detail}</a> : detail}
-                          </p>
-                        ))}
+                        {info.linkType === 'block' && info.link ? (
+                          <a href={info.link} target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                            {info.details.map((detail, detailIndex) => (
+                              <p key={detailIndex} className="text-muted-foreground">{detail}</p>
+                            ))}
+                          </a>
+                        ) : (
+                          info.details.map((detail, detailIndex) => (
+                            <p key={detailIndex} className="text-muted-foreground">
+                              {info.linkType === 'tel' ? <a href={`tel:${detail.replace(/\s/g, '')}`} className="hover:text-primary transition-colors">{detail}</a> :
+                               info.linkType === 'mailto' ? <a href={`mailto:${detail}`} className="hover:text-primary transition-colors">{detail}</a> :
+                               detail}
+                            </p>
+                          ))
+                        )}
                       </div>
                     </div>
                   );

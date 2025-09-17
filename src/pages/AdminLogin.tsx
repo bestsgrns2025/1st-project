@@ -7,7 +7,7 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const navigate = useNavigate();  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

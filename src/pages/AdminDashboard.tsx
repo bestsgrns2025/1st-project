@@ -133,33 +133,50 @@ const AdminDashboard = () => {
             <p className="text-xl text-muted-foreground">No project inquiries found.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {inquiries.map((inquiry) => (
-              <div key={inquiry._id} className="premium-glass glow-border rounded-lg p-6">
-                <h2 className="text-2xl font-bold mb-2 text-primary">{inquiry.name}</h2>
-                <p className="text-muted-foreground mb-1"><strong>Email:</strong> {inquiry.email}</p>
-                {inquiry.company && <p className="text-muted-foreground mb-1"><strong>Company:</strong> {inquiry.company}</p>}
-                <p className="text-muted-foreground mb-1"><strong>Service:</strong> {inquiry.service}</p>
-                {inquiry.budget && <p className="text-muted-foreground mb-1"><strong>Budget:</strong> {inquiry.budget}</p>}
-                {inquiry.timeline && <p className="text-muted-foreground mb-1"><strong>Timeline:</strong> {inquiry.timeline}</p>}
-                <p className="text-muted-foreground mb-4"><strong>Message:</strong> {inquiry.message}</p>
-                {inquiry.location && <p className="text-muted-foreground mb-1"><strong>Location:</strong> {inquiry.location}</p>}
-                {(inquiry.latitude && inquiry.longitude) && (
-                  <p className="text-muted-foreground mb-1">
-                    <strong>Coordinates:</strong> {inquiry.latitude}, {inquiry.longitude}
-                    <a 
-                      href={`https://www.google.com/maps/search/?api=1&query=${inquiry.latitude},${inquiry.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="ml-2 text-primary hover:underline"
-                    >
-                      View on Map
-                    </a>
-                  </p>
-                )}
-                <p className="text-sm text-gray-500">Submitted on: {format(new Date(inquiry.createdAt), 'PPP p')}</p>
-              </div>
-            ))}
+          <div className="overflow-x-auto premium-glass glow-border rounded-lg p-6">
+            <table className="min-w-full bg-transparent">
+              <thead>
+                <tr className="border-b border-gray-700">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Email</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Company</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Service</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Budget</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Timeline</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Message</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Coordinates</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-primary uppercase tracking-wider">Submitted on</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-700">
+                {inquiries.map((inquiry) => (
+                  <tr key={inquiry._id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">{inquiry.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.email}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.company || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.service}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.budget || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.timeline || '-'}</td>
+                    <td className="px-6 py-4 text-sm text-muted-foreground">{inquiry.message}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">{inquiry.location || '-'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
+                      {inquiry.latitude && inquiry.longitude ? (
+                        <a 
+                          href={`https://www.google.com/maps/search/?api=1&query=${inquiry.latitude},${inquiry.longitude}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          {inquiry.latitude}, {inquiry.longitude}
+                        </a>
+                      ) : '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{format(new Date(inquiry.createdAt), 'PPP p')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
       </div>
