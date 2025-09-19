@@ -29,12 +29,12 @@ const protect = (req, res, next) => {
 // @desc    Authenticate admin & get token
 // @access  Public
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-  console.log('Login attempt:', { username, password }); // Added for debugging
-  console.log('Searching for user with query:', { username }); // Added for debugging
+  const { email, password } = req.body;
+  console.log('Login attempt:', { email, password }); // Added for debugging
+  console.log('Searching for user with query:', { email }); // Added for debugging
 
   try {
-    const user = await AdminUser.findOne({ username });
+    const user = await AdminUser.findOne({ email });
     console.log('User found:', user); // Added for debugging
 
     if (user) {
@@ -73,17 +73,17 @@ router.get('/inquiries', protect, async (req, res) => {
 // @desc    Register a new admin user
 // @access  Public (should be restricted in production)
 router.post('/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    let user = await AdminUser.findOne({ username });
+    let user = await AdminUser.findOne({ email });
 
     if (user) {
       return res.status(400).json({ message: 'Admin user already exists' });
     }
 
     user = new AdminUser({
-      username,
+      email,
       password,
     });
 
@@ -92,7 +92,7 @@ router.post('/register', async (req, res) => {
     res.status(201).json({ message: 'Admin user registered successfully' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ message: 'Server Error', error: err.message });
   }
 });
 

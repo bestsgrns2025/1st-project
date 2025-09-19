@@ -71,6 +71,7 @@ const Index = () => {
             <div className="flex space-x-4 mt-4 md:mt-0">
               <a href="/privacy-policy" className="text-muted-foreground hover:text-primary text-sm">Privacy Policy</a>
               <a href="/sitemap" className="text-muted-foreground hover:text-primary text-sm">Sitemap</a>
+              <a href="https://github.com/bestsgrns2025/1st-project.git" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary text-sm">GitHub</a>
             </div>
           </div>
         </div>

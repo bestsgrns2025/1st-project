@@ -49,6 +49,7 @@ app.use('/api/inquiries', require('./routes/inquiryRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/content', require('./routes/contentRoutes')); // Add content routes
 
 // Image upload route
 app.post('/api/upload', upload.single('image'), async (req, res) => {
@@ -74,6 +75,17 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
         path: newImage.path
       }
     });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// Route to get all images
+app.get('/api/images', async (req, res) => {
+  try {
+    const images = await Image.find({});
+    res.json(images);
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
