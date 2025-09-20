@@ -9,6 +9,8 @@ import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 import UploadProduct from "./pages/UploadProduct";
 import PrivacyPolicy from "./pages/PrivacyPolicy"; // Import the new component
+import ForgotPassword from "./pages/ForgotPassword"; // Import the new component
+import ResetPassword from "./pages/ResetPassword"; // Import the new component
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
           <Route path="/upload-product" element={<UploadProduct />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* Add the new route */}
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

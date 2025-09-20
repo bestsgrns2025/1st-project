@@ -2,8 +2,20 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const nodemailer = require('nodemailer');
 const AdminUser = require('../models/AdminUser');
 const ProjectInquiry = require('../models/ProjectInquiry');
+
+// Create a transporter object using the default SMTP transport
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT,
+  secure: process.env.EMAIL_SECURE === 'true', // true for 465, false for other ports
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 // Middleware to protect routes
 const protect = (req, res, next) => {
@@ -90,6 +102,86 @@ router.post('/register', async (req, res) => {
     await user.save();
 
     res.status(201).json({ message: 'Admin user registered successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+});
+
+// @route   POST /api/admin/forgot-password
+// @desc    Request password reset
+// @access  Public
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  console.log('FRONTEND_URL:', process.env.FRONTEND_URL); // Temporary log for debugging
+  console.log('--- ADMIN ROUTES FILE LOADED ---');
+
+  try {
+    const user = await AdminUser.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ message: 'Admin user not found' });
+    }
+
+    // Get reset token
+    const resetToken = user.getResetPasswordToken();
+    await user.save();
+
+    // Create reset URL
+    const resetUrl = `${process.env.FRONTEND_URL}/admin/reset-password/${resetToken}`;
+
+    const message = `
+      You are receiving this email because you (or someone else) has requested the reset of a password.
+      Please make a PUT request to: \n\n ${resetUrl}
+      This token is valid for 10 minutes.
+    `;
+
+    try {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: 'Password Reset Token',
+        text: message,
+      });
+
+      res.status(200).json({ message: 'Email sent' });
+    } catch (err) {
+      console.error(err.message);
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      await user.save();
+      res.status(500).json({ message: 'Email could not be sent', error: err.message });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+});
+
+// @route   PUT /api/admin/reset-password/:token
+// @desc    Reset password
+// @access  Public
+router.put('/reset-password/:token', async (req, res) => {
+  // Get hashed token
+  const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+  try {
+    const user = await AdminUser.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid Token or Token Expired' });
+    }
+
+    // Set new password
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+    await user.save();
+
+    res.status(200).json({ message: 'Password updated successfully' });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Server Error', error: err.message });
