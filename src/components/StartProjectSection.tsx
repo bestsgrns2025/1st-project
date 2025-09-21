@@ -104,7 +104,7 @@ const StartProjectSection = () => {
 
   return (
     <section id="start-project" ref={sectionRef} className="py-8 relative overflow-hidden">
-      <div className="absolute inset-0 section-gradient"></div>
+      <div className="absolute inset-0"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         {/* Header */}

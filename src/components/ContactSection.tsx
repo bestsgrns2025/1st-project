@@ -187,7 +187,7 @@ const ContactSection = () => {
 
   return (
     <section  ref={sectionRef} className="py-6 relative overflow-hidden">
-      <div className="absolute inset-0 section-gradient"></div>
+      <div className="absolute inset-0"></div>
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12 animate-on-scroll">
