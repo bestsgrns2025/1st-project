@@ -7,14 +7,10 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import InquiryManagement from "./pages/InquiryManagement";
-import ImageManagement from "./pages/ImageManagement";
-import ContentManagement from "./pages/ContentManagement";
-import ProductManagement from "./pages/ProductManagement";
-import InquiryEmailPreview from "./pages/InquiryEmailPreview";
+import UploadProduct from "./pages/UploadProduct";
+import PrivacyPolicy from "./pages/PrivacyPolicy"; // Import the new component
+import ForgotPassword from "./pages/ForgotPassword"; // Import the new component
+import ResetPassword from "./pages/ResetPassword"; // Import the new component
 
 const queryClient = new QueryClient();
 
@@ -37,6 +33,7 @@ const App = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

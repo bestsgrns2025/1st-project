@@ -59,11 +59,6 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
       return res.status(400).json({ msg: 'No file uploaded' });
     }
 
-    const { category } = req.body;
-    if (!category) {
-      return res.status(400).json({ msg: 'Category is required' });
-    }
-
     const newImage = new Image({
       filename: req.file.filename,
       path: `/public/uploads/${req.file.filename}`,
@@ -89,16 +84,10 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   }
 });
 
-// Route to get all images
+// Route to get all images or images by category
 app.get('/api/images', async (req, res) => {
   try {
-    const { category } = req.query;
-    let images;
-    if (category) {
-      images = await Image.find({ category: category }).populate('category');
-    } else {
-      images = await Image.find({}).populate('category');
-    }
+    const images = await Image.find({});
     res.json(images);
   } catch (err) {
     console.error(err.message);

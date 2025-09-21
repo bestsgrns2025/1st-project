@@ -5,21 +5,14 @@ interface Image {
   _id: string;
   filename: string;
   path: string;
-  category: {
-    _id: string;
-    name: string;
-  };
-}
-
-interface Category {
-  _id: string;
-  name: string;
+  mimetype: string;
+  size: number;
+  createdAt: string;
 }
 
 const ImageManagement = () => {
   const [images, setImages] = useState<Image[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -29,10 +22,14 @@ const ImageManagement = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories');
-      const data = await response.json();
-      setCategories(data);
-    } catch (error) {
+      const response = await fetch('http://localhost:5000/api/images'); // Assuming a new API endpoint for fetching images
+      if (response.ok) {
+        const data = await response.json();
+        setImages(data);
+      } else {
+        throw new Error('Failed to fetch images');
+      }
+    } catch (error: any) {
       toast({
         title: "Error fetching categories",
         description: "Could not fetch categories from the server.",
@@ -41,16 +38,44 @@ const ImageManagement = () => {
     }
   };
 
-  const fetchImages = async (categoryId: string = 'all') => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!selectedFile) {
+      toast({
+        title: "No file selected",
+        description: "Please select an image to upload.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+
     try {
-      let url = 'http://localhost:5000/api/images';
-      if (categoryId !== 'all') {
-        url += `?category=${categoryId}`;
+      const response = await fetch('http://localhost:5000/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        toast({
+          title: "Upload Successful",
+          description: "Image uploaded successfully.",
+        });
+        setSelectedFile(null);
+        fetchImages(); // Refresh the list of images
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.msg || 'Image upload failed');
       }
-      const response = await fetch(url);
-      const data = await response.json();
-      setImages(data);
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error fetching images",
         description: "Could not fetch images from the server.",
@@ -65,30 +90,53 @@ const ImageManagement = () => {
     fetchImages(categoryId);
   };
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Image Management</h1>
+  const filteredImages = selectedCategory === 'all' ? images : images.filter(image => image.category === selectedCategory);
 
-      <div className="mb-4">
-        <label htmlFor="category-filter" className="block text-sm font-medium text-gray-400 mb-2">Filter by Category</label>
-        <select
-          id="category-filter"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-          className="bg-gray-800 text-white rounded-md p-2"
+  return (
+    <div className="premium-glass glow-border rounded-lg p-6">
+      <h2 className="text-2xl font-bold mb-4 text-foreground">Image Management</h2>
+      
+      <div className="mb-6">
+        <label htmlFor="image-upload" className="block text-sm font-medium mb-2 text-foreground">Upload New Image</label>
+        <input
+          type="file"
+          id="image-upload"
+          accept="image/*"
+          onChange={handleFileChange}
+          className="block w-full text-sm text-muted-foreground
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-full file:border-0
+            file:text-sm file:font-semibold
+            file:bg-primary file:text-primary-foreground
+            hover:file:bg-primary/90"
+        />
+        <button
+          onClick={handleUpload}
+          disabled={!selectedFile || loading}
+          className="hero-button mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <option value="all">All Categories</option>
-          {categories.map(category => (
-            <option key={category._id} value={category._id}>{category.name}</option>
-          ))}
-        </select>
+          {loading ? 'Uploading...' : 'Upload Image'}
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {images.map(image => (
-          <div key={image._id} className="border rounded-lg p-4">
-            <img src={`http://localhost:5000${image.path}`} alt={image.filename} className="w-full h-48 object-cover rounded-md mb-2" />
-            <p className="text-sm text-gray-400">{image.category?.name}</p>
+      <div>
+        <h3 className="text-xl font-bold mb-3 text-foreground">Existing Images</h3>
+        {images.length === 0 ? (
+          <p className="text-muted-foreground">No images uploaded yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {images.map((image) => (
+              <div key={image._id} className="relative group rounded-lg overflow-hidden shadow-lg">
+                <img 
+                  src={`http://localhost:5000${image.path}`}
+                  alt={image.filename}
+                  className="w-full h-48 object-cover"
+                />
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <p className="text-white text-sm">{image.filename}</p>
+                </div>
+              </div>
+            ))}
           </div>
         ))}
       </div>
