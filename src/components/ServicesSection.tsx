@@ -61,7 +61,7 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section id="services" ref={sectionRef} className="py-12 relative overflow-hidden">
+    <section id="services" ref={sectionRef} className="py-12 relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0 section-gradient"></div>
       
       <div className="container mx-auto px-4 relative z-10">

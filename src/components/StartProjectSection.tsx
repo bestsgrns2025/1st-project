@@ -103,7 +103,7 @@ const StartProjectSection = () => {
   ];
 
   return (
-    <section id="start-project" ref={sectionRef} className="py-8 relative overflow-hidden">
+    <section id="start-project" ref={sectionRef} className="py-8 relative overflow-hidden scroll-mt-24">
       <div className="absolute inset-0"></div>
       
       <div className="container mx-auto px-4 relative z-10">
