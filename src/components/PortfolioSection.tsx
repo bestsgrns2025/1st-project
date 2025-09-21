@@ -9,7 +9,7 @@ import posImg from "../assets/Portfolio/Resta.avif";
 import fashionImg from "../assets/Portfolio/fashion.jpg";
 import travelImg from "../assets/Portfolio/travel.png";
 import groceryImg from "../assets/Portfolio/grocery.png";
-import fitness from "../assets/Portfolio/fitness.jpeg";
+import fitness from "../assets/Portfolio/fitness.webp";
 import real from "../assets/Portfolio/real.jpg";
 
 
