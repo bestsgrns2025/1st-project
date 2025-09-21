@@ -7,10 +7,14 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import UploadProduct from "./pages/UploadProduct";
-import PrivacyPolicy from "./pages/PrivacyPolicy"; // Import the new component
-import ForgotPassword from "./pages/ForgotPassword"; // Import the new component
-import ResetPassword from "./pages/ResetPassword"; // Import the new component
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+import InquiryManagement from "./pages/InquiryManagement";
+import ImageManagement from "./pages/ImageManagement";
+import ContentManagement from "./pages/ContentManagement";
+import ProductManagement from "./pages/ProductManagement";
+import InquiryEmailPreview from "./pages/InquiryEmailPreview";
 
 const queryClient = new QueryClient();
 
@@ -23,12 +27,16 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/upload-product" element={<UploadProduct />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* Add the new route */}
+          <Route path="/admin/dashboard" element={<AdminDashboard />}>
+            <Route path="image-management" element={<ImageManagement />} />
+            <Route path="content-management" element={<ContentManagement />} />
+          </Route>
+          <Route path="/admin/product-management" element={<ProductManagement />} />
+          <Route path="/admin/inquiries" element={<InquiryManagement />} />
+          <Route path="/admin/inquiry-preview" element={<InquiryEmailPreview />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

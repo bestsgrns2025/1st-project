@@ -50,6 +50,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/content', require('./routes/contentRoutes')); // Add content routes
+app.use('/api/categories', require('./routes/categoryRoutes')); // Add category routes
 
 // Image upload route
 app.post('/api/upload', upload.single('image'), async (req, res) => {
@@ -58,11 +59,17 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
       return res.status(400).json({ msg: 'No file uploaded' });
     }
 
+    const { category } = req.body;
+    if (!category) {
+      return res.status(400).json({ msg: 'Category is required' });
+    }
+
     const newImage = new Image({
       filename: req.file.filename,
       path: `/public/uploads/${req.file.filename}`,
       mimetype: req.file.mimetype,
-      size: req.file.size
+      size: req.file.size,
+      category: category
     });
 
     await newImage.save();
@@ -72,7 +79,8 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
       image: {
         id: newImage._id,
         filename: newImage.filename,
-        path: newImage.path
+        path: newImage.path,
+        category: newImage.category
       }
     });
   } catch (err) {
@@ -84,7 +92,13 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
 // Route to get all images
 app.get('/api/images', async (req, res) => {
   try {
-    const images = await Image.find({});
+    const { category } = req.query;
+    let images;
+    if (category) {
+      images = await Image.find({ category: category }).populate('category');
+    } else {
+      images = await Image.find({}).populate('category');
+    }
     res.json(images);
   } catch (err) {
     console.error(err.message);
