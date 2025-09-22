@@ -1,13 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
     document.body.classList.add('admin-dashboard-active');
+
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserRole(payload.role);
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+      }
+    }
+
     return () => {
       document.body.classList.remove('admin-dashboard-active');
     };
@@ -41,12 +53,14 @@ const AdminDashboard = () => {
         {/* Navigation Links */}
         <div className="mb-8">
           <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
-            <Link
-              to="/admin/inquiries"
-              className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
-            >
-              Inquiry Management
-            </Link>
+            {(userRole === 'superadmin' || userRole === 'admin') && (
+              <Link
+                to="/admin/inquiries"
+                className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
+              >
+                Inquiry Management
+              </Link>
+            )}
             <Link
               to="/admin/product-management"
               className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
