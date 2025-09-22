@@ -16,6 +16,7 @@ import ProductManagement from "./pages/ProductManagement";
 import InquiryManagement from "./pages/InquiryManagement";
 import InquiryEmailPreview from "./pages/InquiryEmailPreview";
 import Categories from "./pages/Categories";
+import AdminUsersManagement from "./pages/AdminUsersManagement"; // Import new component
 
 import TeamPage from "./pages/TeamPage";
 import EditImagePage from "./pages/EditImagePage";
@@ -43,6 +44,7 @@ const App = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/admin/reset-password/:token" element={<ResetPassword />} />
           <Route path="/categories" element={<Categories />} />
+          <Route path="/admin/users-management" element={<AdminUsersManagement />} /> {/* New route for admin users */}
           
           <Route path="/team" element={<TeamPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

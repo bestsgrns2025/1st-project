@@ -25,7 +25,7 @@ const protect = (req, res, next) => {
     try {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      req.user = decoded.id; // Assuming the JWT payload contains the user ID
+      req.user = { id: decoded.id, role: decoded.role }; // Include role in req.user
       next();
     } catch (error) {
       res.status(401).json({ message: 'Not authorized, token failed' });
@@ -54,7 +54,11 @@ router.post('/login', async (req, res) => {
       console.log('Password match:', isMatch); // Added for debugging
 
       if (isMatch) {
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Update lastLogin timestamp
+        user.lastLogin = Date.now();
+        await user.save();
+
+        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return res.json({ token });
       }
     }
@@ -185,6 +189,27 @@ router.put('/reset-password/:token', async (req, res) => {
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: 'Server Error', error: err.message });
+  }
+});
+
+// Middleware for role-based authorization
+const authorize = (...roles) => (req, res, next) => {
+  if (!req.user || !req.user.role || !roles.includes(req.user.role)) {
+    return res.status(403).json({ message: 'Not authorized to access this route' });
+  }
+  next();
+};
+
+// @route   GET /api/admin/users
+// @desc    Get all admin users
+// @access  Private (Superadmin only)
+router.get('/users', protect, authorize('superadmin'), async (req, res) => {
+  try {
+    const users = await AdminUser.find({}).select('-password'); // Exclude password
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: 'Server Error' });
   }
 });
 

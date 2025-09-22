@@ -12,6 +12,15 @@ const AdminUserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ['superadmin', 'admin', 'editor'], // Define roles
+    default: 'admin', // Default role
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now, // Set default to current time on creation
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });

@@ -88,6 +88,14 @@ const AppSidebar = () => {
           </Link>
         </SidebarMenuItem>
         <SidebarMenuItem>
+          <Link to="/admin/users-management">
+            <SidebarMenuButton isActive={isActive("/admin/users-management")}>
+              <Users className="h-4 w-4" />
+              <span>Admin Users</span>
+            </SidebarMenuButton>
+          </Link>
+        </SidebarMenuItem>
+        <SidebarMenuItem>
           <Link to="#">
             <SidebarMenuButton>
               <BarChart2 className="h-4 w-4" />
