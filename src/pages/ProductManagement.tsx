@@ -52,7 +52,6 @@ const ProductManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-<<<<<<< HEAD
     document.body.classList.add('admin-dashboard-active');
     return () => {
       document.body.classList.remove('admin-dashboard-active');
@@ -66,9 +65,6 @@ const ProductManagement = () => {
       { _id: 'teams', name: 'Teams' },
     ];
     setCategories(predefinedCategories);
-
-=======
->>>>>>> 7dc714f05c2befe69d047137e4de87dda7943232
     fetchProducts();
     fetchCategories();
   }, []);
