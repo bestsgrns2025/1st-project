@@ -199,7 +199,7 @@ const PortfolioSection = () => {
     <section
       id="portfolio"
       ref={sectionRef}
-      className="py-10 relative overflow-hidden scroll-mt-24"
+      className="py-10 relative overflow-hidden scroll-mt-10"
     >
       <div className="absolute inset-0 section-gradient"></div>
 

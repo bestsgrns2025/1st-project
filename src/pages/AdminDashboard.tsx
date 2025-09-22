@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, Outlet } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
 const AdminDashboard = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.body.classList.add('admin-dashboard-active');
+    return () => {
+      document.body.classList.remove('admin-dashboard-active');
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');

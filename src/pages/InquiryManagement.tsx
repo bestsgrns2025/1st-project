@@ -25,6 +25,13 @@ const InquiryManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.body.classList.add('admin-dashboard-active');
+    return () => {
+      document.body.classList.remove('admin-dashboard-active');
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchInquiries = async () => {
       const token = localStorage.getItem('adminToken');
       if (!token) {
@@ -150,7 +157,7 @@ const InquiryManagement = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto premium-glass glow-border rounded-lg p-6">
+          <div className="overflow-x-auto premium-glass rounded-lg p-6">
             <table className="min-w-full bg-transparent">
               <thead>
                 <tr className="border-b border-gray-700">
@@ -183,7 +190,7 @@ const InquiryManagement = () => {
                           href={`https://www.google.com/maps/search/?api=1&query=${inquiry.latitude},${inquiry.longitude}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-primary hover:underline"
+                          className="text-primary"
                         >
                           {inquiry.latitude}, {inquiry.longitude}
                         </a>

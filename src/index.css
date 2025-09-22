@@ -111,11 +111,15 @@
     @apply border-border;
   }
 
-  body {
+    body {
     @apply bg-background text-foreground overflow-x-hidden;
     background: var(--gradient-bg);
     cursor: none;
     min-height: 100vh;
+  }
+
+  body.admin-dashboard-active {
+    cursor: auto;
   }
 
   /* Enhanced Background Layers */
@@ -216,7 +220,7 @@
 }
 
 @layer components {
-  .hero-button {
+    .hero-button {
     @apply relative px-8 py-4 rounded-xl font-semibold text-lg;
     @apply bg-primary text-primary-foreground;
     @apply transition-all duration-300 transform;

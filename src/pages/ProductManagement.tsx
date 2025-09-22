@@ -39,6 +39,13 @@ const ProductManagement = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    document.body.classList.add('admin-dashboard-active');
+    return () => {
+      document.body.classList.remove('admin-dashboard-active');
+    };
+  }, []);
+
+  useEffect(() => {
     // Hardcoded categories
     const predefinedCategories = [
       { _id: 'portfolio', name: 'Portfolio' },
