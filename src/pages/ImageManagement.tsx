@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { Button } from "@/components/ui/button";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 interface Image {
   _id: string;
@@ -8,26 +10,51 @@ interface Image {
   mimetype: string;
   size: number;
   createdAt: string;
+  category: string;
 }
 
 const ImageManagement = () => {
   const [images, setImages] = useState<Image[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [categories, setCategories] = useState<{ _id: string, name: string }[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const navigate = useNavigate(); // Initialize useNavigate
 
-  useEffect(() => {
-    fetchCategories();
-    fetchImages();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchImages = async (categoryId: string = 'all') => {
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/images'); // Assuming a new API endpoint for fetching images
+      const response = await fetch(`http://localhost:5000/api/images${!categoryId || categoryId === 'all' ? '' : `?category=${categoryId}`}`);
       if (response.ok) {
         const data = await response.json();
         setImages(data);
       } else {
         throw new Error('Failed to fetch images');
+      }
+    } catch (error) {
+      toast({
+        title: "Error fetching images",
+        description: "Could not fetch images from the server.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/categories');
+      if (response.ok) {
+        const data = await response.json();
+        const predefinedCategories = [
+          { _id: 'portfolio', name: 'Portfolio' },
+          { _id: 'teams', name: 'Teams' },
+        ];
+        setCategories([...predefinedCategories, ...data]);
+      } else {
+        throw new Error('Failed to fetch categories');
       }
     } catch (error: any) {
       toast({
@@ -37,6 +64,11 @@ const ImageManagement = () => {
       });
     }
   };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchImages();
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -57,6 +89,7 @@ const ImageManagement = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append('image', selectedFile);
+    formData.append('category', selectedCategory);
 
     try {
       const response = await fetch('http://localhost:5000/api/upload', {
@@ -77,10 +110,12 @@ const ImageManagement = () => {
       }
     } catch (error: any) {
       toast({
-        title: "Error fetching images",
-        description: "Could not fetch images from the server.",
+        title: "Upload Failed",
+        description: error.message,
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,6 +123,32 @@ const ImageManagement = () => {
     const categoryId = e.target.value;
     setSelectedCategory(categoryId);
     fetchImages(categoryId);
+  };
+
+  const handleEditImage = (image: Image) => {
+    navigate(`/admin/dashboard/image-management/edit/${image._id}`); // Navigate to edit page
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    if (!window.confirm('Are you sure you want to delete this image?')) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:5000/api/images/${imageId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        toast({ title: "Image Deleted", description: "Image deleted successfully." });
+        fetchImages(selectedCategory);
+      } else {
+        throw new Error('Failed to delete image');
+      }
+    } catch (error: any) {
+      toast({ title: "Delete Failed", description: error.message, variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filteredImages = selectedCategory === 'all' ? images : images.filter(image => image.category === selectedCategory);
@@ -119,13 +180,31 @@ const ImageManagement = () => {
         </button>
       </div>
 
+      <div className="mb-4">
+        <label htmlFor="category-filter" className="block text-sm font-medium mb-2 text-foreground">Filter by Category</label>
+        <select
+          id="category-filter"
+          value={selectedCategory}
+          onChange={handleCategoryChange}
+          className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option value="">Select a category</option>
+          <option value="all">All Categories</option>
+          {categories.map(category => (
+            <option key={category._id} value={category._id}>{category.name}</option>
+          ))}
+        </select>
+      </div>
+
       <div>
         <h3 className="text-xl font-bold mb-3 text-foreground">Existing Images</h3>
-        {images.length === 0 ? (
+        {loading ? (
+          <p className="text-muted-foreground">Loading images...</p>
+        ) : filteredImages.length === 0 ? (
           <p className="text-muted-foreground">No images uploaded yet.</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {images.map((image) => (
+            {filteredImages.map((image) => (
               <div key={image._id} className="relative group rounded-lg overflow-hidden shadow-lg">
                 <img 
                   src={`http://localhost:5000${image.path}`}
@@ -134,11 +213,15 @@ const ImageManagement = () => {
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                   <p className="text-white text-sm">{image.filename}</p>
+                  <div className="absolute bottom-2 left-2 right-2 flex justify-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Button size="sm" onClick={() => handleEditImage(image)}>Edit</Button>
+                    <Button size="sm" variant="destructive" onClick={() => handleDeleteImage(image._id)}>Delete</Button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
-        ))}
+        )}
       </div>
     </div>
   );

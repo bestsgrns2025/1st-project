@@ -33,7 +33,7 @@ const AdminDashboard = () => {
 
         {/* Navigation Links */}
         <div className="mb-8">
-          <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <nav className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
             <Link
               to="/admin/inquiries"
               className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
@@ -51,6 +51,18 @@ const AdminDashboard = () => {
               className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
             >
               Content Management
+            </Link>
+            <Link
+              to="/admin/image-management"
+              className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
+            >
+              Image Management
+            </Link>
+            <Link
+              to="/categories"
+              className="bg-card-foreground text-background hover:bg-primary hover:text-primary-foreground text-center p-4 rounded-lg transition-colors duration-300"
+            >
+              Categories
             </Link>
           </nav>
         </div>
