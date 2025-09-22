@@ -40,22 +40,17 @@ const EditImagePage = () => {
     if (!imageId) return;
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/images?_id=${imageId}`); // Assuming API supports filtering by _id
+      const response = await fetch(`http://localhost:5000/api/images/${imageId}`); // Use new route
       if (response.ok) {
         const data = await response.json();
-        if (data.length > 0) {
-          setEditingImage(data[0]);
-          setNewImageCategory(data[0].category);
-        } else {
-          toast({ title: "Error", description: "Image not found", variant: "destructive" });
-          navigate('/admin/dashboard/image-management'); // Redirect if image not found
-        }
+        setEditingImage(data); // Data is now a single image object
+        setNewImageCategory(data.category);
       } else {
         throw new Error('Failed to fetch image details');
       }
     } catch (error: any) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
-      navigate('/admin/dashboard/image-management'); // Redirect on error
+      navigate('/admin/image-management'); // Redirect on error
     } finally {
       setLoading(false);
     }
@@ -101,15 +96,13 @@ const EditImagePage = () => {
 
       if (response.ok) {
         toast({ title: "Image Updated", description: "Image updated successfully." });
-        navigate('/admin/dashboard/image-management'); // Navigate back after update
+        navigate('/admin/image-management'); // Navigate back after update
       } else {
         const errorData = await response.json();
         throw new Error(errorData.msg || 'Image update failed');
       }
     } catch (error: any) {
       toast({ title: "Update Failed", description: error.message, variant: "destructive" });
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -141,7 +134,7 @@ const EditImagePage = () => {
         </Select>
       </div>
       <div className="flex justify-end space-x-2 mt-6">
-        <Button variant="outline" onClick={() => navigate('/admin/dashboard/image-management')}>Exit</Button>
+        <Button variant="outline" onClick={() => navigate('/admin/image-management')}>Exit</Button>
         <Button onClick={handleUpdateImage}>Replace</Button>
       </div>
     </div>
