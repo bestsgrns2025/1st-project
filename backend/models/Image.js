@@ -18,9 +18,8 @@ const imageSchema = new mongoose.Schema({
     required: true
   },
   category: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true
+    type: String,
+    required: false
   },
   uploadedAt: {
     type: Date,

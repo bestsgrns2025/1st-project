@@ -2,6 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AppSidebar from '@/components/AppSidebar';
+import { Search, Bell, User, ChevronDown, Filter, Plus } from 'lucide-react';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface Category {
   _id: string;
@@ -16,29 +31,28 @@ interface Product {
   price: number;
   category: Category;
   images: string[];
+  stock: number;
+  status: 'Active' | 'Draft' | 'Scheduled';
 }
 
 const ProductManagement = () => {
-  const [activeTab, setActiveTab] = useState('products');
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
-  const [formData, setFormData] = useState<Partial<Product>>({
+  const [isAddProductModalOpen, setIsAddProductModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({
     name: '',
     description: '',
     type: '',
     price: 0,
-    category: undefined,
-    images: [],
+    category: '',
+    images: [] as string[],
   });
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
-  const [newCategory, setNewCategory] = useState('');
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
+<<<<<<< HEAD
     document.body.classList.add('admin-dashboard-active');
     return () => {
       document.body.classList.remove('admin-dashboard-active');
@@ -53,7 +67,10 @@ const ProductManagement = () => {
     ];
     setCategories(predefinedCategories);
 
+=======
+>>>>>>> 7dc714f05c2befe69d047137e4de87dda7943232
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const fetchProducts = async () => {
@@ -62,7 +79,12 @@ const ProductManagement = () => {
       const response = await fetch('http://localhost:5000/api/products');
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        const productsWithStatus = data.map((p: any) => ({
+          ...p,
+          stock: Math.floor(Math.random() * 100),
+          status: ['Active', 'Draft', 'Scheduled'][Math.floor(Math.random() * 3)],
+        }));
+        setProducts(productsWithStatus);
       } else {
         throw new Error('Failed to fetch products');
       }
@@ -73,279 +95,191 @@ const ProductManagement = () => {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/categories');
+      if (response.ok) {
+        const data = await response.json();
+        const predefinedCategories = [
+          { _id: 'portfolio', name: 'Portfolio' },
+          { _id: 'teams', name: 'Teams' },
+        ];
+        setCategories([...predefinedCategories, ...data]);
+      } else {
+        throw new Error('Failed to fetch categories');
+      }
+    } catch (error: any) {
+      toast({ title: "Error", description: "Could not fetch categories", variant: "destructive" });
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: name === 'price' ? parseFloat(value) : value,
-    }));
+    setNewProduct((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCategoryChange = (value: string) => {
+    setNewProduct((prev) => ({ ...prev, category: value }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]; // Get only the first file
-      const uploadFormData = new FormData();
-      uploadFormData.append('image', file);
-
-      // Ensure category is selected for the product before uploading images
-      if (!formData.category) {
-        toast({
-          title: "Category Required",
-          description: "Please select a category for the product before uploading images.",
-          variant: "destructive",
-        });
-        return;
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const uploadedImagePaths = [];
+      for (const file of files) {
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+          const response = await axios.post('http://localhost:5000/api/upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          uploadedImagePaths.push(response.data.image.path);
+        } catch (error) {
+          toast({ title: "Upload Error", description: "Failed to upload image", variant: "destructive" });
+        }
       }
-      uploadFormData.append('category', formData.category._id);
-
-      try {
-        const response = await axios.post('http://localhost:5000/api/upload', uploadFormData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        const imagePath = response.data.image.path; // Get single image path
-        setFormData((prev) => ({
-          ...prev,
-          images: [...(prev.images || []), imagePath],
-        }));
-        toast({ title: "Image Uploaded" });
-      } catch (error: any) {
-        toast({ title: "Upload Error", description: error.message || "An unexpected error occurred during image upload.", variant: "destructive" });
-      }
+      setNewProduct((prev) => ({ ...prev, images: [...prev.images, ...uploadedImagePaths] }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-
-    const method = editingProduct ? 'PUT' : 'POST';
-    const url = editingProduct ? `http://localhost:5000/api/products/${editingProduct._id}` : 'http://localhost:5000/api/products';
-
     try {
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast({ title: "Success", description: `Product ${editingProduct ? 'updated' : 'added'} successfully.` });
-        setFormData({ name: '', description: '', type: '', price: 0, category: undefined, images: [] });
-        setEditingProduct(null);
-        fetchProducts();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || `Failed to ${editingProduct ? 'update' : 'add'} product`);
-      }
-    } catch (error: any) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleEdit = (product: Product) => {
-    setEditingProduct(product);
-    setFormData(product);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this product?')) return;
-
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        toast({
-          title: "Unauthorized",
-          description: "Please log in to delete a product.",
-          variant: "destructive",
-        });
-        navigate('/admin/login');
-        return;
-      }
-      const response = await fetch(`http://localhost:5000/api/products/${id}`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` },
-      });
-      if (response.ok) {
-        toast({ title: "Deleted", description: "Product deleted successfully." });
-        fetchProducts();
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || 'Failed to delete product');
-      }
-    } catch (error: any) {
-      toast({ title: "Error", description: error.message, variant: "destructive" });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Category Management Functions
-  const handleCreateCategory = async () => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      toast({
-        title: "Unauthorized",
-        description: "Please log in to create a category.",
-        variant: "destructive",
-      });
-      navigate('/admin/login');
-      return;
-    }
-    try {
-      const response = await fetch('http://localhost:5000/api/categories', {
+      const response = await fetch('http://localhost:5000/api/products', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ name: newCategory }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct),
       });
       if (response.ok) {
-        setNewCategory('');
-        // fetchCategories(); // No need to fetch categories as they are hardcoded
-        toast({ title: "Category created" });
+        toast({ title: "Success", description: "Product created successfully" });
+        setIsAddProductModalOpen(false);
+        fetchProducts();
+        setNewProduct({ name: '', description: '', type: '', price: 0, category: '', images: [] });
       } else {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || 'Failed to create category');
+        throw new Error('Failed to create product');
       }
     } catch (error: any) {
-      toast({ title: "Error creating category", description: error.message, variant: "destructive" });
+      toast({ title: "Error", description: error.message, variant: "destructive" });
     }
   };
 
-  const handleUpdateCategory = async () => {
-    if (!editingCategory) return;
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
-      toast({
-        title: "Unauthorized",
-        description: "Please log in to update a category.",
-        variant: "destructive",
-      });
-      navigate('/admin/login');
-      return;
-    }
-    try {
-      const response = await fetch(`http://localhost:5000/api/categories/${editingCategory._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({ name: editingCategory.name }),
-      });
-      if (response.ok) {
-        setEditingCategory(null);
-        // fetchCategories(); // No need to fetch categories as they are hardcoded
-        toast({ title: "Category updated" });
-      } else {
-        const errorData = await response.json();
-        throw new Error(errorData.msg || 'Failed to update category');
-      }
-    } catch (error: any) {
-      toast({ title: "Error updating category", description: error.message, variant: "destructive" });
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'Active': return 'bg-green-500';
+      case 'Draft': return 'bg-yellow-500';
+      case 'Scheduled': return 'bg-blue-500';
+      default: return 'bg-gray-500';
     }
   };
-
-  const handleDeleteCategory = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
-      const token = localStorage.getItem('adminToken');
-      if (!token) {
-        toast({
-          title: "Unauthorized",
-          description: "Please log in to delete a category.",
-          variant: "destructive",
-        });
-        navigate('/admin/login');
-        return;
-      }
-      try {
-        const response = await fetch(`http://localhost:5000/api/categories/${id}`, {
-          method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${token}` },
-        });
-        if (response.ok) {
-          // fetchCategories(); // No need to fetch categories as they are hardcoded
-          toast({ title: "Category deleted" });
-        } else {
-          const errorData = await response.json();
-          throw new Error(errorData.msg || 'Failed to delete category');
-        }
-      } catch (error: any) {
-        toast({ title: "Error deleting category", description: error.message, variant: "destructive" });
-      }
-    }
-  };
-
-  const filteredProducts = products.filter(p => selectedCategoryFilter === 'all' || p.category?._id === selectedCategoryFilter);
 
   return (
-    <div className="premium-glass glow-border rounded-lg p-6">
-      <div className="flex border-b mb-4">
-        <button onClick={() => setActiveTab('products')} className={`py-2 px-4 ${activeTab === 'products' ? 'border-b-2 border-primary' : ''}`}>Products</button>
-        <button onClick={() => setActiveTab('categories')} className={`py-2 px-4 ${activeTab === 'categories' ? 'border-b-2 border-primary' : ''}`}>Categories</button>
-      </div>
+    <SidebarProvider>
+      <div className="flex min-h-screen bg-gray-100">
+        <AppSidebar />
+        <main className="flex-1 p-8">
+          <header className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">Products</h1>
+            <div className="flex items-center gap-4">
+              <Search className="h-6 w-6 text-gray-500" />
+              <Bell className="h-6 w-6 text-gray-500" />
+              <User className="h-6 w-6 text-gray-500" />
+            </div>
+          </header>
 
-      {activeTab === 'products' && (
-        <div>
-          <h2 className="text-2xl font-bold mb-4 text-foreground">Product Management</h2>
-          <form onSubmit={handleSubmit} className="space-y-4 mb-8">
-            <input name="name" value={formData.name || ''} onChange={handleInputChange} placeholder="Product Name" className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground" />
-            <textarea name="description" value={formData.description || ''} onChange={handleInputChange} placeholder="Product Description" className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground" />
-            <input name="type" value={formData.type || ''} onChange={handleInputChange} placeholder="Product Type" className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground" />
-            <input name="price" type="number" value={formData.price || 0} onChange={handleInputChange} placeholder="Product Price" className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground" />
-            <select name="category" value={formData.category?._id || ''} onChange={handleInputChange} className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground">
-              <option value="">Select Category</option>
-              {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-            </select>
-            <input type="file" onChange={handleImageUpload} className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground" />
-            <button type="submit" className="hero-button">{editingProduct ? 'Update' : 'Create'}</button>
-          </form>
-
-          <div className="mb-4">
-            <select onChange={(e) => setSelectedCategoryFilter(e.target.value)} value={selectedCategoryFilter} className="w-full p-2 border border-gray-600 rounded-md bg-gray-800 text-foreground">
-              <option value="all">All Categories</option>
-              {categories.map(c => <option key={c._id} value={c._id}>{c.name}</option>)}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredProducts.map((product) => (
-              <div key={product._id} className="premium-glass glow-border rounded-lg p-4">
-                <h4 className="text-lg font-semibold text-primary">{product.name}</h4>
-                <p className="text-muted-foreground text-sm">{product.category?.name}</p>
-                <p className="text-foreground mt-2">{product.description}</p>
-                <p className="text-foreground mt-2">Type: {product.type}</p>
-                <p className="text-primary font-bold mt-2">${product.price.toFixed(2)}</p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {product.images.map((imagePath, index) => (
-                    <img key={index} src={`http://localhost:5000${imagePath}`} alt={product.name} className="w-16 h-16 object-cover rounded-md border border-gray-700" />
-                  ))}
-                </div>
-                <div className="mt-4 space-x-2">
-                  <button onClick={() => handleEdit(product)} className="hero-button bg-blue-600 hover:bg-blue-700">Edit</button>
-                  <button onClick={() => handleDelete(product._id)} className="hero-button bg-red-600 hover:bg-red-700">Delete</button>
-                </div>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Products list</h2>
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm"><Filter className="h-4 w-4 mr-1" /> Filter</Button>
+                <Button variant="outline" size="sm">See All</Button>
+                <Dialog open={isAddProductModalOpen} onOpenChange={setIsAddProductModalOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Add</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Add New Product</DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <Input name="name" placeholder="Product Name" value={newProduct.name} onChange={handleInputChange} />
+                      <Textarea name="description" placeholder="Product Description" value={newProduct.description} onChange={handleInputChange} />
+                      <Input name="type" placeholder="Product Type" value={newProduct.type} onChange={handleInputChange} />
+                      <Input name="price" type="number" placeholder="Product Price" value={newProduct.price} onChange={handleInputChange} />
+                      <Select onValueChange={handleCategoryChange} value={newProduct.category}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((cat) => (
+                            <SelectItem key={cat._id} value={cat._id}>{cat.name}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Input type="file" multiple onChange={handleImageUpload} />
+                      <DialogFooter>
+                        <Button type="submit">Create Product</Button>
+                      </DialogFooter>
+                    </form>
+                  </DialogContent>
+                </Dialog>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
+            </div>
 
-      {activeTab === 'categories' && (
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Category Management</h2>
-          <div className="mb-4">
-            {/* Removed input and button for creating categories */}
-            <p className="text-muted-foreground">Predefined categories are used. Dynamic category creation is disabled.</p>
+            <table className="w-full">
+              <thead>
+                <tr className="text-left text-gray-500">
+                  <th className="p-2"><input type="checkbox" /></th>
+                  <th className="p-2">Product Name <ChevronDown className="inline h-4 w-4" /></th>
+                  <th className="p-2">Category <ChevronDown className="inline h-4 w-4" /></th>
+                  <th className="p-2">Price <ChevronDown className="inline h-4 w-4" /></th>
+                  <th className="p-2">Stock <ChevronDown className="inline h-4 w-4" /></th>
+                  <th className="p-2">Status <ChevronDown className="inline h-4 w-4" /></th>
+                  <th className="p-2">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {products.map((product) => (
+                  <tr key={product._id} className="border-b">
+                    <td className="p-2"><input type="checkbox" /></td>
+                    <td className="p-2 flex items-center gap-2">
+                      {product.images && product.images.length > 0 && (
+                        <img src={`http://localhost:5000${product.images[0]}`} alt={product.name} className="h-10 w-10 rounded-md object-cover" />
+                      )}
+                      <span>{product.name}</span>
+                    </td>
+                    <td className="p-2">{product.category?.name}</td>
+                    <td className="p-2">${product.price.toFixed(2)}</td>
+                    <td className="p-2">{product.stock}</td>
+                    <td className="p-2">
+                      <span className={`px-2 py-1 rounded-full text-white text-xs ${getStatusColor(product.status)}`}>
+                        {product.status}
+                      </span>
+                    </td>
+                    <td className="p-2">
+                      <Button variant="ghost" size="sm">Details</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            <div className="flex justify-between items-center mt-4">
+              <Button variant="outline" size="sm">&larr; Previous</Button>
+              <div className="flex items-center gap-2 text-sm">
+                <Button variant="outline" size="sm">1</Button>
+                <Button variant="default" size="sm">2</Button>
+                <Button variant="outline" size="sm">3</Button>
+                <span>...</span>
+                <Button variant="outline" size="sm">8</Button>
+                <Button variant="outline" size="sm">9</Button>
+                <Button variant="outline" size="sm">10</Button>
+              </div>
+              <Button variant="outline" size="sm">Next &rarr;</Button>
+            </div>
           </div>
-          <ul>
-            {categories.map(cat => (
-              <li key={cat._id} className="flex items-center justify-between p-2 border-b">
-                <span>{cat.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+        </main>
+      </div>
+    </SidebarProvider>
   );
 };
 

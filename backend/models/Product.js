@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true
+  },
   description: {
     type: String,
     required: true,
@@ -15,10 +20,13 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  image: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Image'
+  category: {
+    type: String,
+    required: true
   },
+  images: [{
+    type: String
+  }],
   createdAt: {
     type: Date,
     default: Date.now

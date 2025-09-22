@@ -59,17 +59,12 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
       return res.status(400).json({ msg: 'No file uploaded' });
     }
 
-    const { category } = req.body;
-    if (!category) {
-      return res.status(400).json({ msg: 'Category is required' });
-    }
-
     const newImage = new Image({
       filename: req.file.filename,
       path: `/public/uploads/${req.file.filename}`,
       mimetype: req.file.mimetype,
       size: req.file.size,
-      category: category
+      category: req.body.category
     });
 
     await newImage.save();
@@ -89,17 +84,78 @@ app.post('/api/upload', upload.single('image'), async (req, res) => {
   }
 });
 
-// Route to get all images
+// Route to get all images or images by category
 app.get('/api/images', async (req, res) => {
   try {
     const { category } = req.query;
-    let images;
-    if (category) {
-      images = await Image.find({ category: category }).populate('category');
-    } else {
-      images = await Image.find({}).populate('category');
-    }
+    const filter = category ? { category } : {};
+    const images = await Image.find(filter);
     res.json(images);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   PUT /api/images/:id
+// @desc    Update an image
+// @access  Private (for now, no auth)
+app.put('/api/images/:id', upload.single('image'), async (req, res) => {
+  try {
+    let image = await Image.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ msg: 'Image not found' });
+    }
+
+    // If a new file is uploaded, delete the old one and update image details
+    if (req.file) {
+      // Delete old file
+      const oldImagePath = path.join(__dirname, image.path);
+      if (fs.existsSync(oldImagePath)) {
+        fs.unlinkSync(oldImagePath);
+      }
+
+      image.filename = req.file.filename;
+      image.path = `/public/uploads/${req.file.filename}`;
+      image.mimetype = req.file.mimetype;
+      image.size = req.file.size;
+    }
+
+    // Update category if provided
+    if (req.body.category) {
+      image.category = req.body.category;
+    }
+
+    await image.save();
+
+    res.json({ msg: 'Image updated successfully', image });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
+// @route   DELETE /api/images/:id
+// @desc    Delete an image
+// @access  Private (for now, no auth)
+app.delete('/api/images/:id', async (req, res) => {
+  try {
+    const image = await Image.findById(req.params.id);
+
+    if (!image) {
+      return res.status(404).json({ msg: 'Image not found' });
+    }
+
+    // Delete file from file system
+    const imagePath = path.join(__dirname, image.path);
+    if (fs.existsSync(imagePath)) {
+      fs.unlinkSync(imagePath);
+    }
+
+    await image.deleteOne(); // Use deleteOne() instead of findByIdAndRemove()
+
+    res.json({ msg: 'Image removed successfully' });
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server Error');
