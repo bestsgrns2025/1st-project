@@ -97,6 +97,22 @@ app.get('/api/images', async (req, res) => {
   }
 });
 
+// @route   GET /api/images/:id
+// @desc    Get a single image by ID
+// @access  Public
+app.get('/api/images/:id', async (req, res) => {
+  try {
+    const image = await Image.findById(req.params.id);
+    if (!image) {
+      return res.status(404).json({ msg: 'Image not found' });
+    }
+    res.json(image);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server Error');
+  }
+});
+
 // @route   PUT /api/images/:id
 // @desc    Update an image
 // @access  Private (for now, no auth)

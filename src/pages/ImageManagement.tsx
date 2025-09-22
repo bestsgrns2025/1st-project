@@ -126,7 +126,7 @@ const ImageManagement = () => {
   };
 
   const handleEditImage = (image: Image) => {
-    navigate(`/admin/dashboard/image-management/edit/${image._id}`); // Navigate to edit page
+    navigate(`/admin/image-management/edit/${image._id}`); // Navigate to edit page
   };
 
   const handleDeleteImage = async (imageId: string) => {
