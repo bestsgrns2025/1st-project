@@ -45,7 +45,7 @@ const InquiryManagement = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/admin/inquiries', {
+        const response = await fetch('`${import.meta.env.VITE_API_URL}`/api/admin/inquiries', {
           headers: { 'Authorization': `Bearer ${token}` },
         });
 
@@ -79,7 +79,7 @@ const InquiryManagement = () => {
 
   const handleExport = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/inquiries/export');
+      const response = await fetch('`${import.meta.env.VITE_API_URL}`/api/inquiries/export');
       if (!response.ok) {
         throw new Error('Failed to export inquiries');
       }
