@@ -122,6 +122,10 @@
     cursor: auto;
   }
 
+  body.admin-login-active {
+    cursor: auto;
+  }
+
   /* Enhanced Background Layers */
   body::before {
     content: '';
