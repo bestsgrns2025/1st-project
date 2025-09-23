@@ -53,7 +53,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="min-h-screen flex items-center justify-center bg-background" style={{ cursor: 'crosshair' }}>
       <div className="premium-glass rounded-2xl p-8 max-w-md w-full text-center">
         <h2 className="text-3xl font-bold mb-6 text-foreground">Admin Login</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
