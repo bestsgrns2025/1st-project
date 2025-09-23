@@ -64,6 +64,7 @@ const InquiryManagement = () => {
           throw new Error('Failed to fetch inquiries');
         }
       } catch (error: any) {
+        console.error("Fetch error:", error);
         toast({
           title: "Error",
           description: error.message || "An unexpected error occurred while fetching inquiries.",
