@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -8,6 +8,13 @@ const AdminLogin = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();  
+
+  useEffect(() => {
+    document.body.classList.add('admin-login-active');
+    return () => {
+      document.body.classList.remove('admin-login-active');
+    };
+  }, []);  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
