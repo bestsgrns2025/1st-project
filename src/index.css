@@ -121,10 +121,6 @@
     cursor: auto;
   }
 
-  body.admin-login-active {
-    cursor: auto;
-  }
-
   body.custom-cursor-active {
     cursor: none;
   }
