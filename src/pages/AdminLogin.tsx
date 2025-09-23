@@ -73,7 +73,7 @@ const AdminLogin = () => {
             />
           </div>
           <div className="text-right">
-            <a href="/forgot-password" className="text-sm text-primary hover:underline">Forgot Password?</a>
+            <a href="/forgot-password" className="text-sm text-primary">Forgot Password?</a>
           </div>
           <button
             type="submit"
