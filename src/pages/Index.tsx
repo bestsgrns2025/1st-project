@@ -12,6 +12,7 @@ import CustomCursor from '@/components/CustomCursor';
 
 const Index = () => {
   useEffect(() => {
+    document.body.classList.add('custom-cursor-active');
     // Smooth scrolling for anchor links
     const handleSmoothScroll = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
@@ -33,6 +34,7 @@ const Index = () => {
     });
 
     return () => {
+      document.body.classList.remove('custom-cursor-active');
       links.forEach(link => {
         link.removeEventListener('click', handleSmoothScroll);
       });

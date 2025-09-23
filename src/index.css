@@ -114,7 +114,6 @@
     body {
     @apply bg-background text-foreground overflow-x-hidden;
     background: var(--gradient-bg);
-    cursor: none;
     min-height: 100vh;
   }
 
@@ -124,6 +123,10 @@
 
   body.admin-login-active {
     cursor: auto;
+  }
+
+  body.custom-cursor-active {
+    cursor: none;
   }
 
   /* Enhanced Background Layers */
